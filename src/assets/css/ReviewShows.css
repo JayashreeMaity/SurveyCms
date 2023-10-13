@@ -1,0 +1,36 @@
+.feed-container {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feed-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.feed-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.episode-item {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.episode-name {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.episode-description {
+    font-size: 14px;
+    color: #666666;
+}
+
+/* You can add more styling as needed */

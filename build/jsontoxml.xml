@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+	<show_name>Devotional show</show_name>
+	<show_slug>devotional-show</show_slug>
+	<show_subtitle>An amazing podcast</show_subtitle>
+	<show_description>This is a sample show about interesting topics.</show_description>
+	<show_type>Podcast</show_type>
+	<update_frequency>5</update_frequency>
+	<show_banner>https://cdn.pixabay.com/photo/2016/08/15/16/48/vinyl-1595847_640.jpg</show_banner>
+	<total_listens>12</total_listens>
+	<show_total_durations>10:28:23 Hrs</show_total_durations>
+	<trailer_audio>https://example.com/show_trailer_audio.mp4</trailer_audio>
+	<show_language>English</show_language>
+	<show_image>https://cdn.pixabay.com/photo/2016/08/15/16/48/vinyl-1595847_640.jpg</show_image>
+	<show_author>John Doe</show_author>
+	<show_writer>Jane Smith</show_writer>
+	<show_narrator>Alex Johnson</show_narrator>
+	<show_podcaster>Samantha Lee</show_podcaster>
+	<show_artist>Michael Brown</show_artist>
+	<show_artist>Ed Sheren</show_artist>
+	<show_access_type>Public</show_access_type>
+	<show_publish_date>2023-08-10</show_publish_date>
+	<show_publish_time>08:00 AM</show_publish_time>
+	<show_rss_slug>horror-show</show_rss_slug>
+	<show_credits>Music by John Smith</show_credits>
+	<show_tags>Horror</show_tags>
+	<show_tags>Science</show_tags>
+	<category_id>64ccb31e080af0b9b8e50599</category_id>
+	<show_comingsoon_image>https://example.com/comingsoon_image.jpg</show_comingsoon_image>
+	<episodes>
+		<episode_name>Episode 1: Introduction</episode_name>
+		<episode_slug>episode-1-introduction</episode_slug>
+		<episode_description>This is the first episode of the show.</episode_description>
+		<episode_type>Audio</episode_type>
+		<episode_image>https://cdn.pixabay.com/photo/2016/08/15/16/48/vinyl-1595847_640.jpg</episode_image>
+		<episode_audio>https://example.com/episode_audio.mp3</episode_audio>
+		<episode_author>John Doe</episode_author>
+		<episode_writer>Jane Smith</episode_writer>
+		<episode_narrator>Alex Johnson</episode_narrator>
+		<episode_podcaster>Samantha Lee</episode_podcaster>
+		<episode_artist>Michael Brown</episode_artist>
+		<episode_duration>00:54:23 Hrs</episode_duration>
+		<left_duration>00:14:23 Hrs</left_duration>
+		<episode_access_type>Public</episode_access_type>
+		<episode_publish_date>2023-08-15</episode_publish_date>
+		<episode_publish_time>10:00 AM</episode_publish_time>
+		<show_id>64cbcbcc0b85c8ed669f41ae</show_id>
+	</episodes>
+	<episodes>
+		<episode_name>Episode 2: Introduction</episode_name>
+		<episode_slug>episode-2-introduction</episode_slug>
+		<episode_description>This is the first episode of the show.</episode_description>
+		<episode_type>Audio</episode_type>
+		<episode_image>https://cdn.pixabay.com/photo/2016/08/15/16/48/vinyl-1595847_640.jpg</episode_image>
+		<episode_audio>https://example.com/episode_audio.mp3</episode_audio>
+		<episode_author>John Doe</episode_author>
+		<episode_writer>Jane Smith</episode_writer>
+		<episode_narrator>Alex Johnson</episode_narrator>
+		<episode_podcaster>Samantha Lee</episode_podcaster>
+		<episode_artist>Michael Brown</episode_artist>
+		<episode_duration>00:54:23 Hrs</episode_duration>
+		<left_duration>00:14:23 Hrs</left_duration>
+		<episode_access_type>Public</episode_access_type>
+		<episode_publish_date>2023-08-15</episode_publish_date>
+		<episode_publish_time>10:00 AM</episode_publish_time>
+		<show_id>64cbcbcc0b85c8ed669f41ae</show_id>
+	</episodes>
+</root>

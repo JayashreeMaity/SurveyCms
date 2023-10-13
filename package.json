@@ -102,7 +102,7 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-    "prod": "react-scripts start",
+    "prod": "PORT=3003 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

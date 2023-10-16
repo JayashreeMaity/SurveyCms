@@ -15,7 +15,9 @@
         }
     }
 }
-
+.breadcrumb-item > a {
+    color: #ffffff !important;
+}
 // RTL
 
 [dir="rtl"] {

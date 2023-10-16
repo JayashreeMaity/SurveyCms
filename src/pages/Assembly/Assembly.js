@@ -180,7 +180,7 @@ function Assembly(props) {
                                     <CardBody>
                                         <form onSubmit={handleSubmit}>
                                             <div className="mb-1">
-                                                <Label className="form-label" htmlFor="user_id">User Id</Label>
+                                                <Label htmlFor="user_id">User Id</Label>
                                                 <Select style={{ width: "100%", border: "0px", lineheight: "2" }}
                                                     name="user_id"
                                                     placeholder="Select User"
@@ -201,8 +201,8 @@ function Assembly(props) {
                                                     ))}
                                                 </Select>
                                             </div>
-                                            <div className="mb-1">
-                                                <Label className="form-label" htmlFor="constituency">*constituency</Label>
+                                            <div >
+                                                <Label htmlFor="constituency">Constituency</Label>
                                                 <Select
                                                     style={{ width: "100%", border: "5px", lineheight: "2" }}
                                                     name="constituency"
@@ -211,7 +211,7 @@ function Assembly(props) {
                                                     onChange={(value) => {
                                                         setFormData({ ...formData, constituency: value });
                                                     }}
-                                                    mode="multiple"
+                                                    mode="tags"
                                                     required
                                                 >
                                                     {/* <Select.Option value="" disabled>Select</Select.Option> */}

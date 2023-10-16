@@ -28,10 +28,28 @@ const Viewtable = () => {
   const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [sortingOrder, setSortingOrder] = useState('asc'); // Initial sorting order
-  const pageSize = 10; 
+  const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [searchInput, setSearchInput] = useState('');
+
+
+
+  const filteredData = useMemo(() => {
+    // Step 2: Filter data based on the search input
+    return data.filter(item => (
+      item.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
+    ));
+  }, [data, searchInput]);
+  
+  const handleSearchInputChange = (e) => {
+    // Step 4: Handle search input change
+    setSearchInput(e.target.value);
+  };
+
+
+
 
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
@@ -45,7 +63,8 @@ const Viewtable = () => {
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const paginatedData = data.slice(startIndex, endIndex);
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+  const totalItems = filteredData.length;
 
   AWS.config.update({
     accessKeyId: process.env.REACT_APP_BUCKET_KEY,
@@ -138,10 +157,10 @@ const Viewtable = () => {
       }
       setLoading(false);
     };
-  
+
     fetchData();
   }, [apiEndpoint]);
-  
+
 
   const openDeleteConfirmationModal = (user_id) => {
     setUserToDelete(user_id);
@@ -269,7 +288,7 @@ const Viewtable = () => {
       setData(sortedData);
     }
   };
-console.log(">><<<<<<<<",data)
+  console.log(">><<<<<<<<", data)
   return (
     <React.Fragment>
       <div className="page-content" >
@@ -283,36 +302,21 @@ console.log(">><<<<<<<<",data)
                     <div className="col-md-6">
                       <Link to='/add-users'><Button className=" hover--white btn--primary">Add Users</Button></Link>
                     </div>
-                    {/* <div className="col-md-6">
-                      <div className="toggle-view-buttons-b">
-                        <div className="float-end d-none d-lg-block">
-                          <div className="btn-group box__flex">
-                            <span
-                              className={`toggle-view-button-b mr-2 ${isGridView ? "" : "active"}`}
-                              onClick={handleListViewClick}
-                            >
-                              <UnorderedListOutlined className="toggle-icon-t" />
-                            </span>
-                            <span
-                              className={`toggle-view-button-b ${!isGridView ? "" : "active"}`}
-                              onClick={handleGridViewClick}
-                            >
-                              <AppstoreOutlined className="toggle-icon-t" />
-                            </span>
-                          </div>
-                        </div>
+                    <div className="col-md-6">
+                      {/* Step 3: Add the search input field */}
+                      <div className="search-input">
+                        <input
+                          type="text"
+                          placeholder="Search by Username and Mobile Number"
+                          value={searchInput}
+                          onChange={handleSearchInputChange}
+                        />
                       </div>
-                    </div> */}
-
+                    </div>
                   </div>
-
-
-
                   <Table striped responsive>
                     <thead>
-
                       <tr>
-
                         <th><span >User Id</span></th>
                         <th><span >Username</span></th>
                         <th><span className="last--name">Password</span></th>
@@ -323,7 +327,6 @@ console.log(">><<<<<<<<",data)
                         <th><span >AC No</span></th>
                         {/* <th><span className="actions__width">Actions</span></th> */}
                       </tr>
-
                     </thead>
                     <tbody>
                       {paginatedData.map((item) => (
@@ -344,10 +347,9 @@ console.log(">><<<<<<<<",data)
                   <Pagination
                     current={currentPage}
                     pageSize={pageSize}
-                    total={data.length}
-                    onChange={handlePageChange}
-                    showSizeChanger={false}
-                    // onShowSizeChange={handlePageChange}
+                    total={totalItems}
+                    onChange={setCurrentPage}
+                  // onShowSizeChange={handlePageChange}
                   />
                 </CardBody>
               </div>

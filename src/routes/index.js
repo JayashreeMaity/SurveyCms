@@ -283,7 +283,7 @@ const authProtectedRoutes = [
 	//calendar
 	{ path: "/calendar", component: Calendar },
 
-	{ path: "/dashboard", component: Dashboard },
+	{ path: "/dashboard", component: Users },
 
 	// this route should be at the end of all other routes
 	{ path: "/", exact: true, component: () => <Redirect to="/dashboard" /> }

@@ -348,7 +348,6 @@ console.log(">><<<<<<<<",data)
                     pageSize={pageSize}
                     total={data.length}
                     onChange={handlePageChange}
-                    showSizeChanger={false}
                     // onShowSizeChange={handlePageChange}
                   />
                 </CardBody>

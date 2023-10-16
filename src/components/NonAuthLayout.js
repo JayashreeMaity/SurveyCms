@@ -17,7 +17,7 @@ class NonAuthLayout extends Component {
         currentage = currentage.replaceAll("-" , " ");
 
         document.title =
-          currentage + " | AudioPitara - Sunna Zarrori Hai";
+          currentage + " | Survey";
     }
     render() {
         return <React.Fragment>

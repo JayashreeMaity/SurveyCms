@@ -69,7 +69,7 @@ class Layout extends Component {
     currentage = currentage.replaceAll("-" , " ");
     
     document.title =
-      currentage + " | AudioPitara - Sunna Zarrori Hai";
+      currentage + " | Survey";
       
     if (this.props.leftSideBarTheme) {
       this.props.changeSidebarTheme(this.props.leftSideBarTheme);

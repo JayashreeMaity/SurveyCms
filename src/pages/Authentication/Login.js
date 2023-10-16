@@ -202,16 +202,16 @@ const Login = (props) => {
                                                             <Button color="primary" className="w-md waves-effect waves-light" type="submit">Log In</Button>
                                                         </div>
 
-                                                        <div className="mt-4 text-center">
+                                                        {/* <div className="mt-4 text-center">
                                                             <Link to="/forgot-password" className="text-muted"><i className="mdi mdi-lock me-1"></i> Forgot your password?</Link>
-                                                        </div>
+                                                        </div> */}
                                                     </AvForm>
                                                 </div>
 
-                                                <div className="mt-5 text-center">
+                                                {/* <div className="mt-5 text-center">
                                                     <p>Don't have an account ? <Link to="/register" className="fw-medium text-primary"> Register </Link> </p>
                                                     <p>© 2021 Naxtre. Crafted with <i className="mdi mdi-heart text-danger"></i> by Naxtre</p>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </Col>
                                     </Row>

@@ -109,12 +109,12 @@ class Header extends Component {
 
                             <div className="navbar-brand-box">
                                 <Link to="#" className="logo logo-dark">
-                                    {/* <span className="logo-sm">
-                                    <img className="mobile--logo" src={AudioIcon} alt=""  style={{marginTop: "18px", marginLeft: "-8px", width:"38px"}}/>
+                                    <span className="logo-sm">
+                                    <img className="mobile--logo" src="https://cdn.pixabay.com/photo/2017/05/15/23/48/survey-2316468_1280.png" alt=""  style={{marginTop: "18px", marginLeft: "-8px", width:"38px"}}/>
                                     </span>
                                     <span className="logo-lg">
-                                        <img className="desktop--logo" src={AudioLogo} alt="" height="auto" width="100%" />
-                                    </span> */}
+                                        <img className="desktop--logo" src="https://cdn.pixabay.com/photo/2018/06/27/18/10/company-3502288_1280.jpg" alt="" height="auto" width="100%" />
+                                    </span>
                                 </Link>
 
                                 <Link to="#" className="logo logo-light">

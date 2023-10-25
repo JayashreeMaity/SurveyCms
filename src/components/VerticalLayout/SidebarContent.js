@@ -89,7 +89,8 @@ class SidebarContent extends Component {
 
                         <li>
                             <Link to="/dashboard" className="waves-effect">
-                                <i className="ri-dashboard-line"></i><span className="badge rounded-pill bg-success float-end">3</span>
+                                <i className="ri-dashboard-line"></i>
+                                {/* <span className="badge rounded-pill bg-success float-end">3</span> */}
                                 <span className="ms-1">{this.props.t('Dashboard')}</span>
                             </Link>
                         </li>
@@ -140,7 +141,7 @@ class SidebarContent extends Component {
                         {/* <li className="menu-title">{this.props.t('SETTINGS')}</li> */}
                         <li>
                             <Link to="/view/users" className=" waves-effect">
-                            <i><FontAwesomeIcon icon={faUsers} className="mr-2" /></i>
+                                <i><FontAwesomeIcon icon={faUsers} className="mr-2" /></i>
                                 <span className="ms-1">{this.props.t('Users')}</span>
                             </Link>
                         </li>
@@ -162,6 +163,18 @@ class SidebarContent extends Component {
                                 <span className="ms-1">{this.props.t('Allocate Assembly')}</span>
                             </Link>
                         </li>
+                        {/* <li>
+                            <Link to="/call-center/data" className=" waves-effect">
+                                <i className="ri-calendar-2-line"></i>
+                                <span className="ms-1">{this.props.t('Call Center Data')}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/call-center/allocate" className=" waves-effect">
+                                <i className="ri-calendar-2-line"></i>
+                                <span className="ms-1">{this.props.t('Call Center(Assembly Allocation)')}</span>
+                            </Link>
+                        </li> */}
                         {/* <li>
                             <Link to={`/podcast-setting/${showId}`} className=" waves-effect">
                                 <i><FontAwesomeIcon icon={faGear} className="mr-2" /></i>

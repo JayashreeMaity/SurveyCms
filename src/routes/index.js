@@ -147,6 +147,9 @@ import editEp from "../pages/Episodes/EditEp";
 import Survey from "../pages/Survey/Survey";
 import Expenses from "../pages/Expenses/Expenses";
 import Assemblyalloc from "../pages/Assembly/Assembly";
+import CallCenterData from "../pages/CallCenterData/CallData";
+import AssemblyAllocate from "../pages/CallCenterData/AssemblyAllocation";
+import AddExpense from "../pages/Expenses/AddExpense"
 
 const authProtectedRoutes = [
 
@@ -199,7 +202,10 @@ const authProtectedRoutes = [
 
 	{ path: "/survey/view-survey", component: Survey },
 	{ path: "/expense/view-expense", component: Expenses },
+	{ path: "/expense/add-expense", component: AddExpense },
 	{ path: "/assembly/allocate", component: Assemblyalloc },
+	{ path: "/call-center/data", component: CallCenterData },
+	{ path: "/call-center/allocate", component: AssemblyAllocate },
 
 
 

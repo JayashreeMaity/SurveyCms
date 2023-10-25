@@ -2,7 +2,7 @@ import TableContainer from "../../components/Common/TableContainer";
 import AWS from 'aws-sdk';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import moment from 'moment';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { Card, CardBody, Container, Modal, ModalHeader, ModalBody, Form, Row, Col, Label, Input, Button, Table } from "reactstrap";
@@ -336,7 +336,7 @@ const Viewtable = () => {
                           <td><span className="last--name">{item.password || "N/A"}</span></td>
                           <td><span >{item.mobile_number || "N/A"}</span></td>
                           <td><span >{item.parent_id || "N/A"}</span></td>
-                          <td><span >{item.created_at || "N/A"}</span></td>
+                          <td><span >{moment(item.created_at).format('DD MMM YYYY') || "N/A"}</span></td>
                           <td><span >{item.categories || "N/A"}</span></td>
                           <td><span >{item.ac_no || "N/A"}</span></td>
                         </tr>

@@ -221,7 +221,7 @@ class Header extends Component {
                                 </Button>
                             </div>
 
-                            <NotificationDropdown />
+                            {/* <NotificationDropdown /> */}
 
                             <ProfileMenu />
 

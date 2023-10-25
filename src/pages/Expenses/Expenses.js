@@ -115,7 +115,7 @@ const Expenses = () => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const response = await fetch(`${apiEndpoint}/api/voter/getexpenses`);
+        const response = await fetch(`${apiEndpoint}/api/voter/expense`);
         if (response.ok) {
           const responseData = await response.json();
           if (Array.isArray(responseData) && responseData.length > 0) {
@@ -201,6 +201,7 @@ const Expenses = () => {
     { title: "Users", link: "/" },
     { title: "All Users", link: "#" },
   ]
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -280,47 +281,21 @@ console.log(">><<<<<<<<",data)
                 <CardBody className="card-1">
                   <h2 className="podcast-title mb-lg-4">Expenses</h2>
                   <div className="view-header row mb-6 mb-lg-2">
-                    {/* <div className="col-md-6">
-                      <Link to='/add-users'><Button className=" hover--white btn--primary">Add Users</Button></Link>
-                    </div> */}
-                    {/* <div className="col-md-6">
-                      <div className="toggle-view-buttons-b">
-                        <div className="float-end d-none d-lg-block">
-                          <div className="btn-group box__flex">
-                            <span
-                              className={`toggle-view-button-b mr-2 ${isGridView ? "" : "active"}`}
-                              onClick={handleListViewClick}
-                            >
-                              <UnorderedListOutlined className="toggle-icon-t" />
-                            </span>
-                            <span
-                              className={`toggle-view-button-b ${!isGridView ? "" : "active"}`}
-                              onClick={handleGridViewClick}
-                            >
-                              <AppstoreOutlined className="toggle-icon-t" />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-
+                    <div className="col-md-6">
+                      <Link to='/expense/add-expense'><Button className="hover--white btn--primary">Add Amount</Button></Link>
+                    </div>
                   </div>
-
-
-
                   <Table striped responsive>
                     <thead>
 
                       <tr>
-
-                        <th><span >Id</span></th>
                         <th><span >User Id</span></th>
-                        <th><span >Parent Id</span></th>
-                        <th><span >Travel Expenses</span></th>
-                        <th><span className="last--name">food_expenses</span></th>
-                        <th><span >other_expenses</span></th>
+                        <th><span >Username</span></th>
+                        <th><span >Mobile Number</span></th>
+                        <th><span className="last--name">Constituency Name</span></th>
+                        <th><span >Survey Count</span></th>
                       
-                        <th><span >total_expenses</span></th>
+                        <th><span >Total Expense</span></th>
                        
                         {/* <th><span className="actions__width">Actions</span></th> */}
                       </tr>
@@ -329,14 +304,14 @@ console.log(">><<<<<<<<",data)
                     <tbody>
                       {paginatedData.map((item) => (
                         <tr className="hover__none" key={item.user_id}>
-                          <td><span >{item.Id || "N/A"}</span></td>
-                          <td><span >{item.user_id || "N/A"}</span></td>
-                          <td><span >{item.parent_id || "N/A"}</span></td>
-                          <td><span >{item.travel_expenses || "N/A"}</span></td>
-                          <td><span className="last--name">{item.food_expenses || "N/A"}</span></td>
-                          <td><span >{item.other_expenses || "N/A"}</span></td>
                          
-                          <td><span >{item.total_expenses || "N/A"}</span></td>
+                          <td><span >{item.user_id || "N/A"}</span></td>
+                          <td><span >{item.username || "N/A"}</span></td>
+                          <td><span >{item.mobile_number || "N/A"}</span></td>
+                          <td><span className="last--name">{item.constituency_name || "N/A"}</span></td>
+                          <td><span >{item.SurveyCount || "N/A"}</span></td>
+                         
+                          <td><span >{item.TotalExpense || "N/A"}</span></td>
                          
                         </tr>
                       ))}

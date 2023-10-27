@@ -18,9 +18,17 @@ import {
   Col,
   Label,
   Input,
-  Button,
 } from "reactstrap";
-import { message, Pagination, Tag, Space, Table } from "antd";
+import {
+  message,
+  Pagination,
+  Tag,
+  Space,
+  Table,
+  Button,
+  Select,
+  Typography,
+} from "antd";
 import {
   FormOutlined,
   DeleteOutlined,
@@ -37,11 +45,16 @@ import noProfile from "../../assets/images/noProfile.jpg";
 import { CSVLink } from "react-csv";
 // import { parse } from 'json2csv';
 
+const { Text } = Typography;
+
 const Survey = () => {
   const apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
   const { user_id } = useParams();
   const [data, setData] = useState([]);
   const [allData, setAllData] = useState([]);
+  const [uniqueArr, setUniqueArr] = useState([]);
+  const [dataLength, setDataLength] = useState("");
+  const [amount, setAmount] = useState("");
   const [indexData, setIndexData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,6 +68,7 @@ const Survey = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchInput, setSearchInput] = useState("");
+  const [userId, setUserId] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [filterData, setFilterData] = useState(data);
@@ -211,7 +225,7 @@ const Survey = () => {
     const filtered = data.filter(
       (item) =>
         item.username.toLowerCase().includes(input.toLowerCase()) ||
-        item.user_id.includes(input) ||
+        item.user_id.toString().includes(input) ||
         item.mobile_number.includes(input)
     );
     setData(filtered);
@@ -224,19 +238,31 @@ const Survey = () => {
     }
   }, [searchInput, allData]);
 
+  // useEffect(() => {
+  //   if (data.length <= 0) {
+  //     setDataLength(data.length);
+  //   }
+  // }, [data, dataLength]);
+
   useEffect(() => {
     if (loading) {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            "http://localhost:7500/api/voter/all-surveydata"
+            `${apiEndpoint}/api/voter/all-surveydata`
           );
           if (response.ok) {
             const responseData = await response.json();
             if (Array.isArray(responseData) && responseData.length > 0) {
               setData(responseData);
               setAllData(responseData);
-              console.log(responseData);
+              setDataLength(responseData.length);
+              const updatedData = Array.from(new Set(responseData.map((item) => item.user_id))).map(
+                (id) => {
+                  return responseData.find((item) => item.user_id === id);
+                }
+              )
+              setUniqueArr(updatedData)
             } else {
               console.error("Invalid response format:", responseData);
             }
@@ -252,6 +278,30 @@ const Survey = () => {
     }
     setLoading(false);
   }, [loading, data]);
+
+  useEffect(() => {
+    const fetchAmountData = async () => {
+      try {
+        const response = await fetch(`${apiEndpoint}/api/voter/amount`);
+        if (response.ok) {
+          const responseData = await response.json();
+          if (Array.isArray(responseData) && responseData.length > 0) {
+            setAmount(responseData[0].amount);
+          } else {
+            console.error("Invalid response format:", responseData);
+          }
+        } else {
+          console.error("Failed to fetch data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      setLoading(false);
+    };
+    fetchAmountData();
+    // }
+    // setLoading(false);
+  }, [amount]);
 
   const toggleSortingOrder = () => {
     if (data.length > 0) {
@@ -273,17 +323,27 @@ const Survey = () => {
   const fetchDateData = async () => {
     try {
       // Construct the API URL with start_date and end_date as route parameters
-      const apiUrl = `http://localhost:7500/api/voter/getDatewiseSurvey/${moment(
+      const apiUrl = `${apiEndpoint}/api/voter/getDatewiseSurvey/${moment(
         startDate
-      ).format("YYYY-MM-DD")}/${moment(endDate).format("YYYY-MM-DD")}`;
+      ).format("YYYY-MM-DD")}/${moment(endDate).format(
+        "YYYY-MM-DD"
+      )}/${userId}`;
 
       const response = await fetch(apiUrl);
 
       if (response.ok) {
         const responseData = await response.json();
         if (Array.isArray(responseData) && responseData.length > 0) {
-          setData(responseData);
-          setIndexData(responseData);
+          const updatedData = responseData.map((item) => {
+            const userId = item?.user_id[0];
+            return {
+              ...item,
+              user_id: userId,
+            };
+          });
+          setData(updatedData);
+          setIndexData(updatedData);
+          setDataLength(updatedData.length);
         } else {
           console.error("Invalid response format:", responseData);
         }
@@ -318,18 +378,54 @@ const Survey = () => {
                   <h2 className="podcast-title mb-lg-4">Survey</h2>
                   <div className="col-md-6">
                     <div className="date-filter">
-                      <DatePicker
-                        selected={startDate}
-                        onChange={handleStartDateChange}
-                        placeholderText="Start Date"
-                      />
-                      <DatePicker
-                        selected={endDate}
-                        onChange={handleEndDateChange}
-                        placeholderText="End Date"
-                      />
-                      <Button onClick={handleFilterButtonClick}>Filter</Button>
+                      <div style={{ marginBottom: "8px" }}>
+                        <Text strong>Select start date: </Text>
+                        <DatePicker
+                          selected={startDate}
+                          onChange={handleStartDateChange}
+                          placeholderText="Start Date"
+                        />
+                      </div>
+                      <div style={{ marginBottom: "8px" }}>
+                        <Text strong> Select end date: </Text>
+                        <DatePicker
+                          selected={endDate}
+                          onChange={handleEndDateChange}
+                          placeholderText="End Date"
+                        />
+                      </div>
+                      <Text strong>Select user id: </Text>
+                      <Select
+                        style={{
+                          width: "100px",
+                          border: "0px",
+                          lineheight: "2",
+                          marginLeft: "5px",
+                        }}
+                        placeholder="Select user id"
+                        // value={userId}
+                        onChange={(value) => setUserId(value)}
+                      >
+                        {uniqueArr.map((data) => (
+                          <Select.Option
+                            style={{ border: "0px", height: "35px" }}
+                            key={data.user_id}
+                            value={data.user_id}
+                          >
+                            {data.username}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     </div>
+                    <Button
+                      type="primary"
+                      className="btn btn-primary"
+                      disabled={userId ? false : true}
+                      onClick={handleFilterButtonClick}
+                      style={{ marginTop: "10px", marginBottom: "10px" }}
+                    >
+                      Filter
+                    </Button>
                   </div>
                   <div className="col-md-6">
                     <div className="search-input">
@@ -346,9 +442,26 @@ const Survey = () => {
                     data={data}
                     filename={"survey_data.csv"}
                     className="btn btn-primary"
+                    style={{ marginTop: "10px", marginBottom: "10px" }}
                   >
                     Export CSV
                   </CSVLink>
+                  {dataLength && (
+                    <>
+                      <Text
+                        strong
+                        style={{
+                          // paddingRight: "50px",
+                          paddingLeft: "80px",
+                          color: "blue",
+                        }}
+                      >{`Total survey count : ${dataLength}`}</Text>
+                      {/* <Text
+                        strong
+                        style={{ color: "green" }}
+                      >{`Total amount : ${dataLength * amount}/-`}</Text> */}
+                    </>
+                  )}
                   <Table
                     columns={columns}
                     dataSource={data}

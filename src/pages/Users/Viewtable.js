@@ -47,10 +47,6 @@ const Viewtable = () => {
     // Step 4: Handle search input change
     setSearchInput(e.target.value);
   };
-
-
-
-
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
     // setPageSize(pageSize);

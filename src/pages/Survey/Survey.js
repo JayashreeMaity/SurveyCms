@@ -170,6 +170,16 @@ const Survey = () => {
       key: "address",
     },
     {
+      title: "Latitude",
+      dataIndex: "latitude",
+      key: "latitude",
+    },
+    {
+      title: "Longitude",
+      dataIndex: "longitude",
+      key: "longitude",
+    },
+    {
       title: "Answer1",
       dataIndex: "answer_1",
       key: "answer_1",

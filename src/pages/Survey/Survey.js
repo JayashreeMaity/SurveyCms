@@ -45,6 +45,12 @@ import noProfile from "../../assets/images/noProfile.jpg";
 import { CSVLink } from "react-csv";
 // import { parse } from 'json2csv';
 
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+
+
+
 const { Text } = Typography;
 
 const Survey = () => {
@@ -72,6 +78,23 @@ const Survey = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [filterData, setFilterData] = useState(data);
+  const [locationInfo, setLocationInfo] = useState(null);
+
+  const handleLocationClick = (latitude, longitude) => {
+    setLocationInfo({ latitude, longitude });
+  };
+
+  const handleCloseLocationViewer = () => {
+    setLocationInfo(null);
+  };
+
+  useEffect(() => {
+    if (locationInfo) {
+      const map = L.map('map-view').setView([locationInfo.latitude, locationInfo.longitude], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([locationInfo.latitude, locationInfo.longitude]).addTo(map);
+    }
+  }, [locationInfo]);
 
   const columns = [
     {
@@ -169,15 +192,24 @@ const Survey = () => {
       dataIndex: "address",
       key: "address",
     },
+    // {
+    //   title: "Location",
+    //   dataIndex: "location",
+    //   key: "location",
+    //   render: (text, record) => `${record.latitude}, ${record.longitude}`,
+    // },
     {
-      title: "Latitude",
-      dataIndex: "latitude",
-      key: "latitude",
-    },
-    {
-      title: "Longitude",
-      dataIndex: "longitude",
-      key: "longitude",
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+      render: (text, record) => (
+        <div>
+          {`${record.latitude}, ${record.longitude}`}
+          <button onClick={() => handleLocationClick(record.latitude, record.longitude)}>
+            View Location
+          </button>
+        </div>
+      ),
     },
     {
       title: "Answer1",
@@ -229,6 +261,7 @@ const Survey = () => {
       ),
     },
   ];
+
 
   const handleSearchInputChange = (e) => {
     const input = e.target.value;
@@ -482,6 +515,12 @@ const Survey = () => {
                 </CardBody>
               </div>
             </div>
+            {locationInfo && (
+        <div className="location-viewer">
+          <div id="map-view" style={{ height: '300px' }}></div>
+          <button onClick={handleCloseLocationViewer}>Close</button>
+        </div>
+      )}
           </div>
         </div>
       </div>

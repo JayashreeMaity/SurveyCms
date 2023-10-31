@@ -3,14 +3,14 @@ import AWS from "aws-sdk";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
-
+import { Modal } from "antd";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect, useCallback,useRef  } from "react";
 import {
   Card,
   CardBody,
   Container,
-  Modal,
+
   ModalHeader,
   ModalBody,
   Form,
@@ -48,12 +48,13 @@ import { CSVLink } from "react-csv";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-
+import { GoogleApiWrapper, Map, Marker } from "google-maps-react";
 
 
 const { Text } = Typography;
 
-const Survey = () => {
+
+const Survey = (props) => {
   const apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
   const { user_id } = useParams();
   const [data, setData] = useState([]);
@@ -79,23 +80,62 @@ const Survey = () => {
   const [endDate, setEndDate] = useState(null);
   const [filterData, setFilterData] = useState(data);
   const [locationInfo, setLocationInfo] = useState(null);
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [markers, setMarkers] = useState([]);
+  const mapRef = useRef(null);
 
   const handleLocationClick = (latitude, longitude) => {
     setLocationInfo({ latitude, longitude });
+    setMarkers([{ lat: latitude, lng: longitude }]);
+    setIsMapModalOpen(true);
+    if (mapRef.current) {
+      // Clear existing markers, if any
+      mapRef.current.map && mapRef.current.map.clearMarkers();
+
+      // Add a new marker
+      mapRef.current.map &&
+        mapRef.current.map.markerRefs[0].createMarker({
+          position: {
+            lat: latitude,
+            lng: longitude,
+          },
+        });
+    }
   };
 
   const handleCloseLocationViewer = () => {
     setLocationInfo(null);
+    setIsMapModalOpen(false);
   };
 
   useEffect(() => {
-    if (locationInfo) {
-      const map = L.map('map-view').setView([locationInfo.latitude, locationInfo.longitude], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-      L.marker([locationInfo.latitude, locationInfo.longitude]).addTo(map);
-    }
-  }, [locationInfo]);
+    if (locationInfo && isMapModalOpen) {
+      const mapContainer = document.getElementById("map-view");
 
+      // Check if a map is already initialized in the container
+      if (mapContainer && !mapContainer._leaflet_id) {
+        const map = L.map("map-view").setView(
+          [locationInfo.latitude, locationInfo.longitude],
+          15
+        );
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+          map
+        );
+        L.marker([locationInfo.latitude, locationInfo.longitude]).addTo(map);
+      }
+    }
+  }, [locationInfo, isMapModalOpen]);
+
+  const copyToClipboard = (text) => {
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    message.success("Audio link copied to clipboard");
+  };
+  
   const columns = [
     {
       title: "User Id",
@@ -240,18 +280,31 @@ const Survey = () => {
       title: "Audio",
       dataIndex: "audio_url",
       key: "audio_url",
-      render: (text) =>
-        text ? (
-          <audio controls>
-            <source src={text} type="audio/3gp" />
-            <source src={text} type="audio/mpeg" />
-            <source src={text} type="audio/mp3" />
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
-          "N/A"
-        ),
+      render: (text) => (
+        <div>
+          {text ? (
+            <div>
+              <audio controls>
+                <source src={text} type="audio/3gp" />
+                <source src={text} type="audio/mpeg" />
+                <source src={text} type="audio/mp3" />
+                Your browser does not support the audio element.
+              </audio>
+              <br />
+              <Button
+                type="link"
+                onClick={() => copyToClipboard(text)}
+              >
+                Copy Audio Link
+              </Button>
+            </div>
+          ) : (
+            "N/A"
+          )}
+        </div>
+      ),
     },
+    
     {
       title: "Image",
       dataIndex: "image_url",
@@ -515,12 +568,38 @@ const Survey = () => {
                 </CardBody>
               </div>
             </div>
-            {locationInfo && (
-        <div className="location-viewer">
-          <div id="map-view" style={{ height: '300px' }}></div>
-          <button onClick={handleCloseLocationViewer}>Close</button>
-        </div>
-      )}
+            <Modal
+              title="Location Map"
+              visible={isMapModalOpen}
+              onCancel={handleCloseLocationViewer}
+              footer={null}
+              width={900}
+              
+            >
+              {locationInfo && (
+                <div className="location-viewer">
+                  <div style={{ height: "300px", width: "100%" }}>
+                    <Map
+                      google={props.google}
+                      initialCenter={{
+                        lat: locationInfo.latitude,
+                        lng: locationInfo.longitude,
+                      }}
+                      zoom={15}
+                    >
+                        {markers.map((marker, index) => (
+                      <Marker
+                        position={{
+                          lat: locationInfo.latitude,
+                          lng: locationInfo.longitude,
+                        }}
+                      />
+                        ))}
+                    </Map>
+                  </div>
+                </div>
+              )}
+            </Modal>
           </div>
         </div>
       </div>
@@ -528,4 +607,6 @@ const Survey = () => {
   );
 };
 
-export default Survey;
+export default GoogleApiWrapper({
+  apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+})(Survey);

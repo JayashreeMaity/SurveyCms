@@ -208,7 +208,7 @@ function Assembly(props) {
         // setShowSuccessModal(false);
         props.history.push("/survey/view-survey");
     }
-
+    console.log("updatedAc>>", updatedAc)
     return (
         <React.Fragment>
             <div className="page-content" >
@@ -255,7 +255,8 @@ function Assembly(props) {
                                                         style={{ width: "100%", border: "5px", lineheight: "2" }}
                                                         name="constituency"
                                                         placeholder="Select Constituency"
-                                                        value={updatedAc?.toString()?.replace(/\(\d+\)/g, '').includes(undefined) ? [] : updatedAc}
+                                                        // value={updatedAc?.toString()?.replace(/\(\d+\)/g, '').includes(undefined) ? [] : updatedAc}
+                                                        value={updatedAc ? updatedAc : []}
                                                         onChange={(value) => {
                                                             setFormData({ ...formData, constituency: value });
                                                             setUpdatedAc(value)
@@ -288,7 +289,7 @@ function Assembly(props) {
                                         >
                                             <ModalHeader toggle={handleModalCancel}>Success</ModalHeader>
                                             <ModalBody>
-                                               Added successfully.
+                                                Added successfully.
                                             </ModalBody>
                                             <div className="modal-footer">
                                                 <Button color="primary" onClick={handleOk}>

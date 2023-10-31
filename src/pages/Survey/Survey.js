@@ -115,9 +115,14 @@ const Survey = () => {
       key: "user_name",
     },
     {
-      title: "Mobile Number",
+      title: "Agent Mobile Number",
       dataIndex: "mobile_number",
       key: "mobile_number",
+    },
+    {
+      title: "User Mobile Number",
+      dataIndex: "mobile_no",
+      key: "mobile_no",
     },
     {
       title: "Relation name",

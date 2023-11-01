@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import { Modal } from "antd";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import React, { useMemo, useState, useEffect, useCallback,useRef  } from "react";
+import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import {
   Card,
   CardBody,
@@ -135,7 +135,7 @@ const Survey = (props) => {
     document.body.removeChild(el);
     message.success("Audio link copied to clipboard");
   };
-  
+
   const columns = [
     {
       title: "User Id",
@@ -309,7 +309,7 @@ const Survey = (props) => {
         </div>
       ),
     },
-    
+
     {
       title: "Image",
       dataIndex: "image_url",
@@ -477,60 +477,71 @@ const Survey = (props) => {
               <div className="card--container">
                 <CardBody className="card-1">
                   <h2 className="podcast-title mb-lg-4">Survey</h2>
-                  <div className="col-md-6">
-                    <div className="date-filter">
-                      <div style={{ marginBottom: "8px" }}>
-                        <Text strong>Select start date: </Text>
-                        <DatePicker
+                  <div className="col-md-12">
+                    <div className="date-filter row">
+                      <div className="col-md-3" style={{ marginBottom: "8px" }}>
+                        <Text strong>Select start date:</Text>
+                        <div style={{width:"216px"}}>
+                        <DatePicker 
                           selected={startDate}
                           onChange={handleStartDateChange}
                           placeholderText="Start Date"
                         />
+                        </div>
                       </div>
-                      <div style={{ marginBottom: "8px" }}>
-                        <Text strong> Select end date: </Text>
-                        <DatePicker
+                      <div className="col-md-3" style={{ marginBottom: "8px", marginRight:"-56px" }}>
+                        <Text strong>Select end date:</Text>
+                        <div style={{width:"216px"}}>
+                        <DatePicker 
                           selected={endDate}
                           onChange={handleEndDateChange}
                           placeholderText="End Date"
                         />
+                        </div>
                       </div>
-                      <Text strong>Select user id: </Text>
-                      <Select
-                        style={{
-                          width: "100px",
-                          border: "0px",
-                          lineheight: "2",
-                          marginLeft: "5px",
-                        }}
-                        placeholder="Select user id"
-                        // value={userId}
-                        onChange={(value) => setUserId(value)}
-                      >
-                        {uniqueArr.map((data) => (
-                          <Select.Option
-                            style={{ border: "0px", height: "35px" }}
-                            key={data.user_id}
-                            value={data.user_id}
+                      <div className="col-md-3" style={{ marginBottom: "8px" }}>
+                        <Text strong>Select user id:</Text>
+                        <div>
+                          <Select
+                            style={{
+                              width: "200px",
+                              border: "0px",
+                              
+                              marginLeft: "0px",
+                            }}
+                            placeholder="Select user id"
+                            onChange={(value) => setUserId(value)}
                           >
-                            {data.username}
-                          </Select.Option>
-                        ))}
-                      </Select>
+                            {uniqueArr.map((data) => (
+                              <Select.Option
+                                style={{ border: "0px", height: "35px" }}
+                                key={data.user_id}
+                                value={data.user_id}
+                              >
+                                {data.username}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="col-md-3" style={{ marginBottom: "8px" }}>
+                    
+                        <Button
+                          type="primary"
+                          className="btn btn-primary"
+                          disabled={userId ? false : true}
+                          onClick={handleFilterButtonClick}
+                          style={{ marginTop: "10px", marginBottom: "10px" }}
+                        >
+                          Filter
+                        </Button>
+                      </div>
                     </div>
-                    <Button
-                      type="primary"
-                      className="btn btn-primary"
-                      disabled={userId ? false : true}
-                      onClick={handleFilterButtonClick}
-                      style={{ marginTop: "10px", marginBottom: "10px" }}
-                    >
-                      Filter
-                    </Button>
                   </div>
                   <div className="col-md-6">
                     <div className="search-input">
                       <input
+                        style={{ width: "318px" }}
                         type="text"
                         placeholder="Search by person name,id,Mobile no"
                         value={searchInput}
@@ -538,15 +549,17 @@ const Survey = (props) => {
                       />
                     </div>
                   </div>
+                  <Button className="csv-button"
+                  style={{marginLeft:"70rem", backgroundColor:"#82c3a8"}}>
+                    <CSVLink
+                      data={data}
+                      filename={"survey_data.csv"}
 
-                  <CSVLink
-                    data={data}
-                    filename={"survey_data.csv"}
-                    className="btn btn-primary"
-                    style={{ marginTop: "10px", marginBottom: "10px" }}
-                  >
-                    Export CSV
-                  </CSVLink>
+                      style={{ marginTop: "10px", marginBottom: "10px" }}
+                    >
+                      Export CSV
+                    </CSVLink>
+                  </Button>
                   {dataLength && (
                     <>
                       <Text
@@ -579,7 +592,7 @@ const Survey = (props) => {
               onCancel={handleCloseLocationViewer}
               footer={null}
               width={900}
-              
+
             >
               {locationInfo && (
                 <div className="location-viewer">
@@ -592,14 +605,14 @@ const Survey = (props) => {
                       }}
                       zoom={15}
                     >
-                        {markers.map((marker, index) => (
-                      <Marker
-                        position={{
-                          lat: locationInfo.latitude,
-                          lng: locationInfo.longitude,
-                        }}
-                      />
-                        ))}
+                      {markers.map((marker, index) => (
+                        <Marker
+                          position={{
+                            lat: locationInfo.latitude,
+                            lng: locationInfo.longitude,
+                          }}
+                        />
+                      ))}
                     </Map>
                   </div>
                 </div>

@@ -85,9 +85,9 @@ function AddExpense(props) {
                                             </div>
                                             <FormGroup >
                                                 <div >
-                                                    <Button type="submit" color="primary" className="btn--primar me-1" style={{ marginTop: "13px", fontSize: "16px" }}>
+                                                    <button type="submit"  style={{ marginTop: "13px", fontSize: "16px", backgroundColor:"#82c3a8" }}>
                                                         Submit
-                                                    </Button>
+                                                    </button>
                                                 </div>
                                             </FormGroup>
                                         </form>

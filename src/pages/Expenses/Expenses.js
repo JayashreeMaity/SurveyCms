@@ -5,8 +5,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-import { Card, CardBody, Container, Modal, ModalHeader, ModalBody, Form, Row, Col, Label, Input, Button, Table } from "reactstrap";
-import { message, Pagination } from 'antd';
+import { Card, CardBody, Container, Modal, ModalHeader, ModalBody, Form, Row, Col, Label, Input, Button, } from "reactstrap";
+import { message, Pagination, Table, Typography } from 'antd';
 import { FormOutlined, DeleteOutlined, UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { products, } from "../../common/data/ecommerce";
 import axios from "axios";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import noProfile from '../../assets/images/noProfile.jpg'
-
+import { CSVLink } from "react-csv";
 
 const Expenses = () => {
   const apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
@@ -33,15 +33,42 @@ const Expenses = () => {
   // const [totalItems, setTotalItems] = useState(0);
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchInput, setSearchInput] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+  const [exportData, setExportData] = useState([]);
+
+  const { Text } = Typography;
 
 
-  const filteredData = useMemo(() => {
-    // Step 2: Filter data based on the search input
-    return data.filter(item => (
-      item.username.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
-    ));
-  }, [data, searchInput]);
+  const handleFilter = () => {
+    if (startDate && endDate) {
+      const filter = data.filter((item) => {
+        const createdAt = new Date(item.created_at);
+        return createdAt >= startDate && createdAt <= endDate;
+      });
+      console.log('filter:', filter);
+      setData(filter);
+      setCurrentPage(1);
+    }
+  };
+
+  const handleReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(paginatedData);
+    setCurrentPage(1);
+  };
+
+  // console.log('Filtered Data:', filterData);
+
+  // const filteredData = useMemo(() => {
+  //   // Step 2: Filter data based on the search input
+  //   return data.filter(item => (
+  //     item.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //     item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
+  //   ));
+  // }, [data, searchInput]);
 
   const handleSearchInputChange = (e) => {
     // Step 4: Handle search input change
@@ -105,6 +132,34 @@ const Expenses = () => {
     fetchData();
   }, [apiEndpoint]);
 
+  useEffect(() => {
+    filterData();
+  }, [data, startDate, endDate, searchInput]);
+
+  const filterData = () => {
+    let filtered = data;
+
+    // Step 1: Filter data based on the date range
+    if (startDate && endDate) {
+      filtered = filtered.filter((item) => {
+        const createdAt = new Date(item.created_at);
+        return createdAt >= startDate && createdAt <= endDate;
+      });
+    }
+
+    // Step 2: Filter data based on the search input
+    if (searchInput) {
+      filtered = filtered.filter((item) => {
+        return (
+          item.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+          item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
+        );
+      });
+    }
+
+    setFilteredData(filtered);
+    setExportData(filtered);
+  };
 
   const openDeleteConfirmationModal = (user_id) => {
     setUserToDelete(user_id);
@@ -245,57 +300,86 @@ const Expenses = () => {
                   <h2 className="podcast-title mb-lg-4">Expenses</h2>
                   <div className="view-header row mb-6 mb-lg-2">
                     <div className="col-md-6">
-                      <Link to='/expense/add-expense'><Button className="hover--white btn--primary">Add Amount</Button></Link>
+                      <Link to='/expense/add-expense'><button style={{ backgroundColor:"#82c3a8"}}>Add Amount</button></Link>
                     </div>
                   </div>
-                  <div className="search-input">
-                    <input style={{ width: "318px" }}
-                    
-                      type="text"
-                      placeholder="Search by Username and Mobile Number"
-                      value={searchInput}
-                      onChange={handleSearchInputChange}
-                    />
+
+                  <div className="col-md-12">
+                    <div className="date-filter row" style={{ display: "-webkit-box" }}>
+                      <div className="col-md-3" style={{ marginBottom: "8px" }}>
+                        <Text strong>Select start date:</Text>
+                        <div style={{ width: "216px" }}>
+                          <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            placeholderText="Start Date"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-3" style={{ marginBottom: "8px", marginRight: "-56px" }}>
+                        <Text strong>Select end date:</Text>
+                        <div style={{ width: "216px" }}>
+                          <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            placeholderText="End Date"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        <div className="search-input">
+                          <input style={{ width: "318px", marginTop: "22px" }}
+
+                            type="text"
+                            placeholder="Search by Username and Mobile Number"
+                            value={searchInput}
+                            onChange={handleSearchInputChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-3" >
+                        <button 
+                          style={{ backgroundColor: "#82c3a8", marginTop:"22px",marginLeft:"10vh" }}>
+                          <CSVLink
+                            data={exportData}
+                            filename={"expense_data.csv"}
+
+
+                          >
+                            Export CSV
+                          </CSVLink>
+                        </button>
+                      </div>
+
+
+                    </div>
                   </div>
-                  <Table striped responsive>
-                    <thead>
+                 
 
-                      <tr>
-                        <th><span >User Id</span></th>
-                        <th><span >Username</span></th>
-                        <th><span >Mobile Number</span></th>
-                        <th><span className="last--name">Constituency Name</span></th>
-                        <th><span >Survey Count</span></th>
 
-                        <th><span >Total Expense</span></th>
 
-                        {/* <th><span className="actions__width">Actions</span></th> */}
-                      </tr>
 
-                    </thead>
-                    <tbody>
-                      {paginatedData.map((item) => (
-                        <tr className="hover__none" key={item.user_id}>
-
-                          <td><span >{item.user_id || "N/A"}</span></td>
-                          <td><span >{item.username || "N/A"}</span></td>
-                          <td><span >{item.mobile_number || "N/A"}</span></td>
-                          <td><span className="last--name">{item.constituency_name || "N/A"}</span></td>
-                          <td><span >{item.SurveyCount || "N/A"}</span></td>
-
-                          <td><span >{item.TotalExpense || "N/A"}</span></td>
-
-                        </tr>
-                      ))}
-                    </tbody>
-
+                  <Table
+                    dataSource={paginatedData}
+                    loading={loading}
+                    rowKey="user_id"
+                    pagination={false}
+                    bordered
+                    scroll={{ x: "max-content" }}
+                  >
+                    <Table.Column title="User Id" dataIndex="user_id" key="user_id" />
+                    <Table.Column title="Username" dataIndex="username" key="username" />
+                    <Table.Column title="Mobile Number" dataIndex="mobile_number" key="mobile_number" />
+                    <Table.Column title="Constituency Name" dataIndex="constituency_name" key="constituency_name" />
+                    <Table.Column title="Survey Count" dataIndex="SurveyCount" key="SurveyCount" />
+                    <Table.Column title="Total Expense" dataIndex="TotalExpense" key="TotalExpense" />
+                    <Table.Column title="Created At" dataIndex="created_at" key="created_at" />
                   </Table>
                   <Pagination
                     current={currentPage}
                     pageSize={pageSize}
-                    total={data.length}
-                    onChange={handlePageChange}
-                  // onShowSizeChange={handlePageChange}
+                    total={filteredData.length}
+                    onChange={(page) => setCurrentPage(page)}
                   />
                 </CardBody>
               </div>

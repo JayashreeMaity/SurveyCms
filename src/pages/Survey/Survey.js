@@ -136,6 +136,16 @@ const Survey = (props) => {
     message.success("Audio link copied to clipboard");
   };
 
+  const copyToLocationClipboard = (text) => {
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    message.success("copied");
+  };
+
   const columns = [
     {
       title: "User Id",
@@ -250,9 +260,22 @@ const Survey = (props) => {
       render: (text, record) => (
         <div>
           {`${record.latitude}, ${record.longitude}`}
-          <button onClick={() => handleLocationClick(record.latitude, record.longitude)}>
+          {/* <button onClick={() => handleLocationClick(record.latitude, record.longitude)}>
             View Location
-          </button>
+          </button> */}
+          <br />
+          <button>
+            <a
+              href={`https://www.google.com/maps?q=${record.latitude},${record.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Location
+            </a></button>
+          <br />
+          <Button type="link" onClick={() => copyToLocationClipboard(`${record.latitude}, ${record.longitude}`)}>
+            Copy Coordinates
+          </Button>
         </div>
       ),
     },
@@ -327,7 +350,7 @@ const Survey = (props) => {
       (item) =>
         item.username.toLowerCase().includes(input.toLowerCase()) ||
         item.user_id.toString().includes(input) ||
-        item.mobile_number.includes(input)
+        item.mobile_no.includes(input)
     );
     setData(filtered);
     setSearchInput(input);
@@ -478,25 +501,25 @@ const Survey = (props) => {
                 <CardBody className="card-1">
                   <h2 className="podcast-title mb-lg-4">Survey</h2>
                   <div className="col-md-12">
-                    <div className="date-filter row">
+                    <div className="date-filter row" style={{ display: "flex" }}>
                       <div className="col-md-3" style={{ marginBottom: "8px" }}>
                         <Text strong>Select start date:</Text>
-                        <div style={{width:"216px"}}>
-                        <DatePicker 
-                          selected={startDate}
-                          onChange={handleStartDateChange}
-                          placeholderText="Start Date"
-                        />
+                        <div >
+                          <DatePicker style={{ width: "216px" }}
+                            selected={startDate}
+                            onChange={handleStartDateChange}
+                            placeholderText="Start Date"
+                          />
                         </div>
                       </div>
-                      <div className="col-md-3" style={{ marginBottom: "8px", marginRight:"-56px" }}>
+                      <div className="col-md-3" style={{ marginBottom: "8px", marginRight: "-56px" }}>
                         <Text strong>Select end date:</Text>
-                        <div style={{width:"216px"}}>
-                        <DatePicker 
-                          selected={endDate}
-                          onChange={handleEndDateChange}
-                          placeholderText="End Date"
-                        />
+                        <div >
+                          <DatePicker style={{ width: "216px" }}
+                            selected={endDate}
+                            onChange={handleEndDateChange}
+                            placeholderText="End Date"
+                          />
                         </div>
                       </div>
                       <div className="col-md-3" style={{ marginBottom: "8px" }}>
@@ -506,7 +529,7 @@ const Survey = (props) => {
                             style={{
                               width: "200px",
                               border: "0px",
-                              
+
                               marginLeft: "0px",
                             }}
                             placeholder="Select user id"
@@ -514,7 +537,7 @@ const Survey = (props) => {
                           >
                             {uniqueArr.map((data) => (
                               <Select.Option
-                                style={{ border: "0px", height: "35px" }}
+                                style={{ border: "0px", height: "28px" }}
                                 key={data.user_id}
                                 value={data.user_id}
                               >
@@ -525,57 +548,63 @@ const Survey = (props) => {
                         </div>
                       </div>
                       <div className="col-md-3" style={{ marginBottom: "8px" }}>
-                    
-                        <Button
+
+                        <button
                           type="primary"
-                          className="btn btn-primary"
+                          // className="btn btn-primary"
                           disabled={userId ? false : true}
                           onClick={handleFilterButtonClick}
-                          style={{ marginTop: "10px", marginBottom: "10px" }}
+                          style={{ marginTop: "24px", marginBottom: "10px", backgroundColor: "#76c9e4" }}
                         >
                           Filter
-                        </Button>
+                        </button>
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-6">
-                    <div className="search-input">
-                      <input
-                        style={{ width: "318px" }}
-                        type="text"
-                        placeholder="Search by person name,id,Mobile no"
-                        value={searchInput}
-                        onChange={handleSearchInputChange}
-                      />
+                  <div className="date-filter col-md-9">
+                    <div className="col-md-3">
+                      <div className="search-input">
+                        <input
+                          style={{ width: "347px" }}
+                          type="text"
+                          placeholder="Search by person name,UserId,User M Number"
+                          value={searchInput}
+                          onChange={handleSearchInputChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3" >
+                      <Button className="csv-button"
+                        style={{ backgroundColor: "#82c3a8", marginLeft:"44vh" }}>
+                        <CSVLink
+                          data={data}
+                          filename={"survey_data.csv"}
+
+                          style={{ marginTop: "10px", marginBottom: "10px" }}
+                        >
+                          Export CSV
+                        </CSVLink>
+                      </Button>
                     </div>
                   </div>
-                  <Button className="csv-button"
-                  style={{marginLeft:"70rem", backgroundColor:"#82c3a8"}}>
-                    <CSVLink
-                      data={data}
-                      filename={"survey_data.csv"}
-
-                      style={{ marginTop: "10px", marginBottom: "10px" }}
-                    >
-                      Export CSV
-                    </CSVLink>
-                  </Button>
-                  {dataLength && (
-                    <>
-                      <Text
-                        strong
-                        style={{
-                          // paddingRight: "50px",
-                          paddingLeft: "80px",
-                          color: "blue",
-                        }}
-                      >{`Total survey count : ${dataLength}`}</Text>
-                      {/* <Text
+                  <div>
+                    {dataLength && (
+                      <>
+                        <Text
+                          strong
+                          style={{
+                            // paddingRight: "50px",
+                            paddingLeft: "80px",
+                            color: "blue",
+                          }}
+                        >{`Total survey count : ${dataLength}`}</Text>
+                        {/* <Text
                         strong
                         style={{ color: "green" }}
                       >{`Total amount : ${dataLength * amount}/-`}</Text> */}
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                   <Table
                     columns={columns}
                     dataSource={data}

@@ -300,7 +300,7 @@ const Expenses = () => {
                   <h2 className="podcast-title mb-lg-4">Expenses</h2>
                   <div className="view-header row mb-6 mb-lg-2">
                     <div className="col-md-6">
-                      <Link to='/expense/add-expense'><button style={{ backgroundColor:"#82c3a8"}}>Add Amount</button></Link>
+                      <Link to='/expense/add-expense'><button style={{ backgroundColor:"rgb(118, 201, 228)"}}>Add Amount</button></Link>
                     </div>
                   </div>
 

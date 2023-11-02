@@ -296,7 +296,7 @@ const Viewtable = () => {
                   <h2 className="podcast-title mb-lg-4">All Users</h2>
                   <div className="view-header row mb-6 mb-lg-2">
                     <div className="col-md-6">
-                      <Link to='/add-users'><button style={{ backgroundColor:"#82c3a8"}}>Add Users</button></Link>
+                      <Link to='/add-users'><button style={{ backgroundColor:"rgb(118, 201, 228)"}}>Add Users</button></Link>
                     </div>
                     <div className="col-md-6">
                       {/* Step 3: Add the search input field */}

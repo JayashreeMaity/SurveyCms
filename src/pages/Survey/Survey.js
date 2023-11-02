@@ -350,7 +350,8 @@ const Survey = (props) => {
       (item) =>
         item.username.toLowerCase().includes(input.toLowerCase()) ||
         item.user_id.toString().includes(input) ||
-        item.mobile_no.includes(input)
+        item.mobile_no.includes(input) ||
+        item.constituency.includes(input) 
     );
     setData(filtered);
     setSearchInput(input);
@@ -565,9 +566,9 @@ const Survey = (props) => {
                     <div className="col-md-3">
                       <div className="search-input">
                         <input
-                          style={{ width: "347px" }}
+                          style={{ width: "500px" }}
                           type="text"
-                          placeholder="Search by person name,UserId,User M Number"
+                          placeholder="Search by Person Name, UserId, User Mobile Number, Constituency"
                           value={searchInput}
                           onChange={handleSearchInputChange}
                         />

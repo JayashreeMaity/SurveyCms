@@ -32,21 +32,30 @@ const Viewtable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchInput, setSearchInput] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
 
 
-  const filteredData = useMemo(() => {
-    // Step 2: Filter data based on the search input
-    return data.filter(item => (
-      item.username.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
-    ));
-  }, [data, searchInput]);
+  // const filteredData = useMemo(() => {
+  //   // Step 2: Filter data based on the search input
+  //   return data.filter(item => (
+  //     item.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //     item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
+  //   ));
+  // }, [data, searchInput]);
   
   const handleSearchInputChange = (e) => {
-    // Step 4: Handle search input change
-    setSearchInput(e.target.value);
+    const searchValue = e.target.value.toLowerCase();
+    // Filter the data based on the search input
+    const filtered = data.filter((item) =>
+      item.username.toLowerCase().includes(searchValue) ||
+      item.mobile_number.toLowerCase().includes(searchValue)
+    );
+    setFilteredData(filtered);
+    setSearchInput(searchValue);
+    setCurrentPage(1); // Reset to the first page when searching
   };
+  
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
     // setPageSize(pageSize);
@@ -142,6 +151,7 @@ const Viewtable = () => {
             });
             console.log("<<<MMMMMMM", sortedData);
             setData(sortedData);
+            setFilteredData(sortedData); // Store the data in both data and filteredData
           } else {
             console.error('Invalid response format:', responseData);
           }
@@ -153,9 +163,10 @@ const Viewtable = () => {
       }
       setLoading(false);
     };
-
+  
     fetchData();
   }, [apiEndpoint]);
+  
 
 
   const openDeleteConfirmationModal = (user_id) => {
@@ -300,8 +311,8 @@ const Viewtable = () => {
                     </div>
                     <div className="col-md-6">
                       {/* Step 3: Add the search input field */}
-                      <div className="search-input" style={{width:"316px"}}>
-                        <input
+                      <div className="search-input" >
+                        <input style={{width:"316px"}} 
                           type="text"
                           placeholder="Search by Username and Mobile Number"
                           value={searchInput}
@@ -315,12 +326,15 @@ const Viewtable = () => {
                       <tr>
                         <th><span >User Id</span></th>
                         <th><span >Username</span></th>
-                        <th><span className="last--name">Password</span></th>
+                        <th><span >Agent Name</span></th>
+                        {/* <th><span className="last--name">Password</span></th> */}
                         <th><span >Mobile Number</span></th>
                         <th><span >Parent Id</span></th>
-                        <th><span >Created At</span></th>
+                        <th><span >Constituency Name</span></th>
+                       
                         <th><span >Categories</span></th>
                         <th><span >AC No</span></th>
+                        <th><span >Created At</span></th>
                         {/* <th><span className="actions__width">Actions</span></th> */}
                       </tr>
                     </thead>
@@ -329,12 +343,15 @@ const Viewtable = () => {
                         <tr className="hover__none" key={item.user_id}>
                           <td><span >{item.user_id || "N/A"}</span></td>
                           <td><span >{item.username || "N/A"}</span></td>
-                          <td><span className="last--name">{item.password || "N/A"}</span></td>
+                          <td><span >{item.agent_name || "N/A"}</span></td>
+                          {/* <td><span className="last--name">{item.password || "N/A"}</span></td> */}
                           <td><span >{item.mobile_number || "N/A"}</span></td>
                           <td><span >{item.parent_id || "N/A"}</span></td>
-                          <td><span >{moment(item.created_at).format('DD MMM YYYY') || "N/A"}</span></td>
+                          <td><span >{item.constituency_name || "N/A"}</span></td>
+                          
                           <td><span >{item.categories || "N/A"}</span></td>
                           <td><span >{item.ac_no || "N/A"}</span></td>
+                          <td><span >{moment(item.created_at).format('DD MMM YYYY') || "N/A"}</span></td>
                         </tr>
                       ))}
                     </tbody>

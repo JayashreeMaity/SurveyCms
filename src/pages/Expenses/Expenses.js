@@ -15,6 +15,10 @@ import axios from "axios";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import noProfile from '../../assets/images/noProfile.jpg'
 import { CSVLink } from "react-csv";
+import moment from 'moment'
+
+
+
 
 const Expenses = () => {
   const apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
@@ -71,9 +75,17 @@ const Expenses = () => {
   // }, [data, searchInput]);
 
   const handleSearchInputChange = (e) => {
-    // Step 4: Handle search input change
-    setSearchInput(e.target.value);
+    const inputValue = e.target.value;
+    setSearchInput(inputValue);
+  
+    // Filter the entire data array based on the search input
+    const filteredData = data.filter((item) => (
+      item.username.toLowerCase().includes(inputValue.toLowerCase()) ||
+      item.mobile_number.toLowerCase().includes(inputValue.toLowerCase())
+    ));
+    setFilteredData(filteredData);
   };
+  
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
     // setPageSize(pageSize);
@@ -117,6 +129,7 @@ const Expenses = () => {
             });
             console.log("<<<MMMMMMM", sortedData);
             setData(sortedData);
+            
           } else {
             console.error('Invalid response format:', responseData);
           }
@@ -313,6 +326,7 @@ const Expenses = () => {
                             selected={startDate}
                             onChange={(date) => setStartDate(date)}
                             placeholderText="Start Date"
+                            dateFormat="dd-MM-yy"
                           />
                         </div>
                       </div>
@@ -323,6 +337,7 @@ const Expenses = () => {
                             selected={endDate}
                             onChange={(date) => setEndDate(date)}
                             placeholderText="End Date"
+                            dateFormat="dd-MM-yy"
                           />
                         </div>
                       </div>
@@ -359,7 +374,7 @@ const Expenses = () => {
 
 
 
-                  <Table
+                  <Table className="expense_table"
                     dataSource={paginatedData}
                     loading={loading}
                     rowKey="user_id"
@@ -373,7 +388,7 @@ const Expenses = () => {
                     <Table.Column title="Constituency Name" dataIndex="constituency_name" key="constituency_name" />
                     <Table.Column title="Survey Count" dataIndex="SurveyCount" key="SurveyCount" />
                     <Table.Column title="Total Expense" dataIndex="TotalExpense" key="TotalExpense" />
-                    <Table.Column title="Created At" dataIndex="created_at" key="created_at" />
+                    <Table.Column title="Created At" dataIndex="created_at" key="created_at" render={(text)=> text ? moment(text).format('DD MMM YYYY') : "N/A"} />
                   </Table>
                   <Pagination
                     current={currentPage}

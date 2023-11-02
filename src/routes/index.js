@@ -103,46 +103,6 @@ import ForgetPwd1 from "../pages/AuthenticationInner/ForgetPassword";
 import Users from "../pages/Users/Viewtable";
 import AddUsers from "../pages/Users/AddUsers";
 
-//Audio
-import ViewAudio from "../pages/Audio/ViewAudio"
-import AddAudio from "../pages/Audio/AddAudio"
-//Artist
-import ViewArtist from "../pages/Artist/ViewArtist";
-import AddArtist from "../pages/Artist/AddArtist";
-//Genre
-import ViewGenre from "../pages/Genre/ViewGenre"
-import AddGenre from "../pages/Genre/AddGenre"
-//language
-import ViewLan from '../pages/Language/ViewLan'
-import AddLan from '../pages/Language/AddLan'
-
-//Playlist
-import ViewPlaylist from "../pages/PlayList/ViewPlaylist"
-import AddPlaylist from "../pages/PlayList/AddPlaylist"
-//podacst
-import ViewPodcast from "../pages/Podcast/ViewPodcast"
-import NewPodcast from "../pages/Podcast/NewPodcast"
-import AddPod from "../pages/Podcast/AddPod"
-import ViewCate from "../pages/Podcast/ViewCate"
-import AddCate from "../pages/Podcast/AddCate"
-import ReviewShows from "../pages/Podcast/ReviewShows"
-import Episodes from '../pages/Episodes/Episodes'
-import Rss from '../pages/Episodes/Rss'
-import EpisodesList from '../pages/Episodes/EpisodesList'
-import ImportPodcast from '../pages/Podcast/ImportPodcast'
-import Podtesform from '../pages/Podcast/Podtesform'
-import EditPod from '../pages/Podcast/EditPod'
-import EpPlayList from '../pages/PlayList/EpPlayList'
-import ArShow from '../pages/Artist/ArShow'
-import ArEp from '../pages/Artist/ArEp'
-import AddEpisode from "../pages/Podcast/AddEpisode";
-import EditPodEp from "../pages/Podcast/EditPodEp";
-import Notes from "../pages/ShowNotes/Notes";
-import NotesTemplates from "../pages/ShowNotes/NotesTemplates";
-import MediaGallery from "../pages/Media/MediaGallery";
-
-
-import editEp from "../pages/Episodes/EditEp";
 
 import Survey from "../pages/Survey/Survey";
 import Expenses from "../pages/Expenses/Expenses";
@@ -157,47 +117,6 @@ const authProtectedRoutes = [
 	{ path: "/view/users", component: Users },
 	{ path: "/add-users", component: AddUsers },
 
-	//Audio
-	{ path: "/view/audio-list", component: ViewAudio },
-	{ path: "/add/audio-list", component: AddAudio },
-	//Artist
-	{ path: "/view/artist-list", component: ViewArtist },
-	{ path: "/add/artist-list", component: AddArtist },
-	{ path: "/artist-shows/:showId", component: ArShow },
-	{ path: "/artist-episodes/:showId", component: ArEp },
-	//Genre
-	{ path: "/view/genre-list", component: ViewGenre },
-	{ path: "/add/genre-list", component: AddGenre },
-	//LAnGUAGE
-	{ path: "/view/language", component: ViewLan },
-	{ path: "/add/language-list", component: AddLan },
-	//playlist
-	{ path: "/view/playlist-list", component: ViewPlaylist },
-	{ path: "/add/playlist-list", component: AddPlaylist },
-	{ path: "/playlist-episodes/:showId", component: EpPlayList },
-	//podcast 
-	{ path: "/my-podcast", component: ViewPodcast },
-	{ path: "/create/podcast", component: AddPod },
-	{ path: "/create/add-episode/:showId", component: AddEpisode },
-	{ path: "/new/podcast", component: NewPodcast },
-
-	{ path: "/view/category", component: ViewCate },
-	{ path: "/add/category", component: AddCate },
-	{ path: "/review/shows", component: ReviewShows },
-	{ path: "/import/file", component: ImportPodcast },
-	{ path: "/form", component: Podtesform },
-
-	{ path: "/episodes/:showId", component: Episodes },
-	{ path: "/episodeslist/:showId", component: EpisodesList },
-	{ path: "/podcast-setting/:showId", component: EditPod },
-	{ path: "/edit-episode/:showId", component: EditPodEp },
-	{ path: "/edit-ep/:showId", component: editEp },
-	//Notes
-	{ path: "/show-notes/:showId", component: Notes },
-	{ path: "/show-notes-templates/:showId", component: NotesTemplates },
-
-	//MediaGallery
-	{ path: "/media/image", component: MediaGallery },
 
 
 	{ path: "/survey/view-survey", component: Survey },
@@ -300,7 +219,7 @@ const publicRoutes = [
 	{ path: "/login", component: Login },
 	{ path: "/forgot-password", component: ForgetPwd },
 	{ path: "/register", component: Register },
-	{ path: "/feeds/:showSlug", component: Rss },
+	// { path: "/feeds/:showSlug", component: Rss },
 	{ path: "/lock-screen", component: AuthLockScreen },
 
 	// Authentication Inner

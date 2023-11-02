@@ -84,6 +84,9 @@ const Survey = (props) => {
   const [markers, setMarkers] = useState([]);
   const mapRef = useRef(null);
 
+
+
+  
   const handleLocationClick = (latitude, longitude) => {
     setLocationInfo({ latitude, longitude });
     setMarkers([{ lat: latitude, lng: longitude }]);
@@ -166,11 +169,6 @@ const Survey = (props) => {
       title: "Parent Id",
       dataIndex: "parent_id",
       key: "parent_id",
-    },
-    {
-      title: "Constituency Type",
-      dataIndex: "constituency_type",
-      key: "constituency_type",
     },
     {
       title: "Constituency",
@@ -467,6 +465,8 @@ const Survey = (props) => {
             };
           });
           setData(updatedData);
+          console.log("updatedData",updatedData)
+          console.log("user_id>>>>>>",userId)
           setIndexData(updatedData);
           setDataLength(updatedData.length);
         } else {
@@ -510,6 +510,7 @@ const Survey = (props) => {
                             selected={startDate}
                             onChange={handleStartDateChange}
                             placeholderText="Start Date"
+                            
                           />
                         </div>
                       </div>
@@ -520,6 +521,7 @@ const Survey = (props) => {
                             selected={endDate}
                             onChange={handleEndDateChange}
                             placeholderText="End Date"
+                          
                           />
                         </div>
                       </div>
@@ -595,7 +597,7 @@ const Survey = (props) => {
                           strong
                           style={{
                             // paddingRight: "50px",
-                            paddingLeft: "80px",
+                            // paddingLeft: "80px",
                             color: "blue",
                           }}
                         >{`Total survey count : ${dataLength}`}</Text>

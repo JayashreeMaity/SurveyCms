@@ -155,6 +155,7 @@ const Expenses = () => {
     // Step 1: Filter data based on the date range
     if (startDate && endDate) {
       filtered = filtered.filter((item) => {
+        console.log("item.created_at <<<><<><<><<><><><><><<><><><><><><><><>", item.created_at);
         const createdAt = new Date(item.created_at);
         return createdAt >= startDate && createdAt <= endDate;
       });

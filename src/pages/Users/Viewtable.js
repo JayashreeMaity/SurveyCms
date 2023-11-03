@@ -43,7 +43,7 @@ const Viewtable = () => {
   //     item.mobile_number.toLowerCase().includes(searchInput.toLowerCase())
   //   ));
   // }, [data, searchInput]);
-  
+
   const handleSearchInputChange = (e) => {
     const searchValue = e.target.value.toLowerCase();
     // Filter the data based on the search input
@@ -55,7 +55,7 @@ const Viewtable = () => {
     setSearchInput(searchValue);
     setCurrentPage(1); // Reset to the first page when searching
   };
-  
+
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
     // setPageSize(pageSize);
@@ -163,10 +163,10 @@ const Viewtable = () => {
       }
       setLoading(false);
     };
-  
+
     fetchData();
   }, [apiEndpoint]);
-  
+
 
 
   const openDeleteConfirmationModal = (user_id) => {
@@ -307,12 +307,12 @@ const Viewtable = () => {
                   <h2 className="podcast-title mb-lg-4">All Users</h2>
                   <div className="view-header row mb-6 mb-lg-2">
                     <div className="col-md-6">
-                      <Link to='/add-users'><button style={{ backgroundColor:"rgb(118, 201, 228)"}}>Add Users</button></Link>
+                      <Link to='/add-users'><button style={{ backgroundColor: "rgb(118, 201, 228)" }}>Add Users</button></Link>
                     </div>
                     <div className="col-md-6">
                       {/* Step 3: Add the search input field */}
                       <div className="search-input" >
-                        <input style={{width:"316px"}} 
+                        <input style={{ width: "316px" }}
                           type="text"
                           placeholder="Search by Username and Mobile Number"
                           value={searchInput}
@@ -331,7 +331,7 @@ const Viewtable = () => {
                         <th><span >Mobile Number</span></th>
                         <th><span >Parent Id</span></th>
                         <th><span >Constituency Name</span></th>
-                       
+
                         <th><span >Categories</span></th>
                         <th><span >AC No</span></th>
                         <th><span >Created At</span></th>
@@ -348,7 +348,7 @@ const Viewtable = () => {
                           <td><span >{item.mobile_number || "N/A"}</span></td>
                           <td><span >{item.parent_id || "N/A"}</span></td>
                           <td><span >{item.constituency_name || "N/A"}</span></td>
-                          
+
                           <td><span >{item.categories || "N/A"}</span></td>
                           <td><span >{item.ac_no || "N/A"}</span></td>
                           <td><span >{moment(item.created_at).format('DD MMM YYYY') || "N/A"}</span></td>
@@ -360,7 +360,7 @@ const Viewtable = () => {
                   <Pagination
                     current={currentPage}
                     pageSize={pageSize}
-                    total={totalItems}
+                    total={filteredData.length}
                     onChange={setCurrentPage}
                   // onShowSizeChange={handlePageChange}
                   />

@@ -29,6 +29,7 @@ import {
   Select,
   Typography,
 } from "antd";
+import { DownCircleTwoTone, UpCircleTwoTone } from '@ant-design/icons';
 import {
   FormOutlined,
   DeleteOutlined,
@@ -64,6 +65,7 @@ const Survey = (props) => {
   const [amount, setAmount] = useState("");
   const [indexData, setIndexData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setfilterLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedCategory, setEditedCategory] = useState(null);
   const [formData, setFormData] = useState({});
@@ -75,7 +77,7 @@ const Survey = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState({ user_id: "" });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [filterData, setFilterData] = useState(data);
@@ -83,10 +85,28 @@ const Survey = (props) => {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [markers, setMarkers] = useState([]);
   const mapRef = useRef(null);
+  const paginationRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (paginationRef.current) {
+      paginationRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
+  };
+
+  const scrollToTop = () => {
+    if (paginationRef.current) {
+      paginationRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
 
 
 
-  
   const handleLocationClick = (latitude, longitude) => {
     setLocationInfo({ latitude, longitude });
     setMarkers([{ lat: latitude, lng: longitude }]);
@@ -303,6 +323,11 @@ const Survey = (props) => {
       key: "answer_5",
     },
     {
+      title: "Created At",
+      dataIndex: "created_at",
+      key: "created_at",
+    },
+    {
       title: "Audio",
       dataIndex: "audio_url",
       key: "audio_url",
@@ -349,7 +374,7 @@ const Survey = (props) => {
         item.username.toLowerCase().includes(input.toLowerCase()) ||
         item.user_id.toString().includes(input) ||
         item.mobile_no.includes(input) ||
-        item.constituency.includes(input) 
+        item.constituency.includes(input)
     );
     setData(filtered);
     setSearchInput(input);
@@ -368,15 +393,17 @@ const Survey = (props) => {
   // }, [data, dataLength]);
 
   useEffect(() => {
-    if (loading) {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      if (loading) {
         try {
           const response = await fetch(
             `${apiEndpoint}/api/voter/all-surveydata`
           );
           if (response.ok) {
             const responseData = await response.json();
+            console.log("response data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", responseData);
             if (Array.isArray(responseData) && responseData.length > 0) {
+              setfilterLoading(false)
               setData(responseData);
               setAllData(responseData);
               setDataLength(responseData.length);
@@ -395,11 +422,10 @@ const Survey = (props) => {
         } catch (error) {
           console.error("Error:", error);
         }
-        setLoading(false);
-      };
-      fetchData();
+      }
+      setLoading(false);
     }
-    setLoading(false);
+    fetchData();
   }, [loading, data]);
 
   useEffect(() => {
@@ -443,42 +469,90 @@ const Survey = (props) => {
     }
   };
 
+  console.log("filterLoading>>>>", filterLoading);
+
   const fetchDateData = async () => {
     try {
-      // Construct the API URL with start_date and end_date as route parameters
-      const apiUrl = `${apiEndpoint}/api/voter/getDatewiseSurvey/${moment(
-        startDate
-      ).format("YYYY-MM-DD")}/${moment(endDate).format(
-        "YYYY-MM-DD"
-      )}/${userId}`;
+     
+        // If user_id is selected, fetch data filtered by user_id
+        const apiUrl = `${apiEndpoint}/api/voter/getDatewiseSurvey/${moment(startDate).format("YYYY-MM-DD")}/${moment(endDate).format("YYYY-MM-DD")}`;
 
-      const response = await fetch(apiUrl);
+        const requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userId),
+        };
+        const response = await fetch(apiUrl, requestOptions);
+        console.log("response", response);
+        if (response.ok) {
+          const responseData = await response.json();
+          if (Array.isArray(responseData) && responseData.length > 0) {
+            setfilterLoading(false)
+            const updatedData = responseData.map((item) => {
+              const userId = item?.user_id[0];
+              return {
+                ...item,
+                user_id: userId,
+              };
+            });
+            setData(updatedData);
+            console.log("updatedData", updatedData);
+            console.log("user_id>>>>>>", userId);
+            setIndexData(updatedData);
 
-      if (response.ok) {
-        const responseData = await response.json();
-        if (Array.isArray(responseData) && responseData.length > 0) {
-          const updatedData = responseData.map((item) => {
-            const userId = item?.user_id[0];
-            return {
-              ...item,
-              user_id: userId,
-            };
-          });
-          setData(updatedData);
-          console.log("updatedData",updatedData)
-          console.log("user_id>>>>>>",userId)
-          setIndexData(updatedData);
-          setDataLength(updatedData.length);
+            setDataLength(updatedData.length);
+          } else {
+            console.error("Invalid response format:", responseData);
+            message.error("No Data")
+          }
         } else {
-          console.error("Invalid response format:", responseData);
+          console.error("Failed to fetch data:", response.statusText);
         }
-      } else {
-        console.error("Failed to fetch data:", response.statusText);
-      }
+      
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  // useEffect(() => {
+  //   if (startDate && endDate && data.length > 0) {
+  //     console.log("filtered________________________________________________DATA>>>>", data);
+  //     const dateArr = [new Date(startDate), new Date(endDate)]
+  //     console.log("statrtrrttrtrtrtrtrtrtrtDate>>>>", startDate, "endDate >>>>", endDate);
+  //     // const filter = data.filter((item) => {
+  //     //   const createdAtStart = new Date(item.created_at[0]);
+  //     //   const createdAtEnd = new Date(item.created_at[1]);
+  //     //   const createArr = [createdAtStart, createdAtEnd];
+  //     //   console.log("statrtrrttrtrtrtrtrtrtrtDate>>>>*&*^&^^&*(*()*)())&(*&(&(&(&(*()((&)()*)*)()_(_(_(_(**)&(&(&", item.created_at);
+  //     //   console.log("createdATTTTTT", createdAtStart);
+  //     //   return createArr.toString() === dateArr.toString();
+  //     // });
+  //     const start = new Date(startDate);
+  //     const end = new Date(endDate);
+  //     //  if(data.length > 0){
+  //     const filteredArr = data
+  //       ?.map((item) => ({
+  //         ...item,
+  //         created_at: item.created_at?.map((dateString) => new Date(dateString)),
+  //       }))
+  //       .filter((item) => {
+  //         console.log("item >>>>>", item);
+  //         const createdAtDates = item.created_at;
+  //         return createdAtDates?.some((createdAt) => createdAt >= start && createdAt <= end);
+  //       });
+  //     //  }
+  //     // setAllData(filter);
+  //     // setFilterData(filter);
+  //     setData(filteredArr);
+  //     // setCurrentPage(1);
+  //     console.log("DAAAAAAAAAAAAAAAAAAAAAAAAAAATTTTTTTTTTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEE>>>>", filteredArr);
+  //   }
+  // }, [startDate, endDate, data])
+
+
+  console.log("data >>>>>>>>>>>>>", data);
 
   const handleFilterButtonClick = () => {
     fetchDateData();
@@ -510,7 +584,7 @@ const Survey = (props) => {
                             selected={startDate}
                             onChange={handleStartDateChange}
                             placeholderText="Start Date"
-                            
+
                           />
                         </div>
                       </div>
@@ -521,7 +595,7 @@ const Survey = (props) => {
                             selected={endDate}
                             onChange={handleEndDateChange}
                             placeholderText="End Date"
-                          
+
                           />
                         </div>
                       </div>
@@ -536,7 +610,7 @@ const Survey = (props) => {
                               marginLeft: "0px",
                             }}
                             placeholder="Select user id"
-                            onChange={(value) => setUserId(value)}
+                            onChange={(value) => setUserId({ user_id: value.toString() })}
                           >
                             {uniqueArr.map((data) => (
                               <Select.Option
@@ -555,7 +629,7 @@ const Survey = (props) => {
                         <button
                           type="primary"
                           // className="btn btn-primary"
-                          disabled={userId ? false : true}
+                          // disabled={userId ? false : true}
                           onClick={handleFilterButtonClick}
                           style={{ marginTop: "24px", marginBottom: "10px", backgroundColor: "#76c9e4" }}
                         >
@@ -568,9 +642,9 @@ const Survey = (props) => {
                     <div className="col-md-3">
                       <div className="search-input">
                         <input
-                          style={{ width: "500px" }}
+                          style={{ width: "535px" }}
                           type="text"
-                          placeholder="Search by Person Name, UserId, User Mobile Number, Constituency"
+                          placeholder="Search by Person Name, UserId, User Mobile Number, Constituency, Ac No."
                           value={searchInput}
                           onChange={handleSearchInputChange}
                         />
@@ -578,7 +652,7 @@ const Survey = (props) => {
                     </div>
                     <div className="col-md-3" >
                       <Button className="csv-button"
-                        style={{ backgroundColor: "#82c3a8", marginLeft:"44vh" }}>
+                        style={{ backgroundColor: "#82c3a8", marginLeft: "44vh" }}>
                         <CSVLink
                           data={data}
                           filename={"survey_data.csv"}
@@ -590,31 +664,43 @@ const Survey = (props) => {
                       </Button>
                     </div>
                   </div>
-                  <div>
-                    {dataLength && (
-                      <>
-                        <Text
-                          strong
-                          style={{
-                            // paddingRight: "50px",
-                            // paddingLeft: "80px",
-                            color: "blue",
-                          }}
-                        >{`Total survey count : ${dataLength}`}</Text>
-                        {/* <Text
+                  <div className="date-filter col-md-9">
+                    <div className="col-md-3">
+                      {dataLength && (
+                        <>
+                          <Text
+                            strong
+                            style={{
+                              // paddingRight: "50px",
+                              // paddingLeft: "80px",
+                              color: "blue",
+                            }}
+                          >{`Total survey count : ${dataLength}`}</Text>
+                          {/* <Text
                         strong
                         style={{ color: "green" }}
                       >{`Total amount : ${dataLength * amount}/-`}</Text> */}
-                      </>
-                    )}
+                        </>
+                      )}
+                    </div>
+                    <div className="col-md-3">
+                      <DownCircleTwoTone onClick={scrollToBottom}
+                        style={{ marginBottom: '10px', marginLeft: "50vh", fontSize: "large", backgroundColor: "black" }} />
+                    </div>
                   </div>
+
                   <Table
                     columns={columns}
                     dataSource={data}
+                    loading={data.length === 0 || filterLoading}
                     scroll={{
                       x: 1500,
                     }}
+                    ref={paginationRef}
                   />
+                  <div className="col-md-3">
+                    <UpCircleTwoTone onClick={scrollToTop} style={{ marginBottom: '10px', marginLeft: "50vh", fontSize: "large", backgroundColor: "black" }} />
+                  </div>
                 </CardBody>
               </div>
             </div>

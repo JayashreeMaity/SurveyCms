@@ -129,6 +129,7 @@ const Expenses = () => {
             });
             console.log("<<<MMMMMMM", sortedData);
             setData(sortedData);
+            setFilteredData(sortedData);
             
           } else {
             console.error('Invalid response format:', responseData);
@@ -395,7 +396,7 @@ const Expenses = () => {
                     current={currentPage}
                     pageSize={pageSize}
                     total={filteredData.length}
-                    onChange={(page) => setCurrentPage(page)}
+                    onChange={setCurrentPage}
                   />
                 </CardBody>
               </div>
